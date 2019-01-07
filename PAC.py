@@ -1,12 +1,11 @@
 import pygame
 background_colour = (255,255,255)
 
-(width, height) = (400, 400)
+width, height = 400, 400
 screen = pygame.display.set_mode((width, height))
 
 pygame.display.set_caption('PACMAN')
-screen.fill(background_colour)
-pygame.display.flip()
+
 
 running = True
 while running:
@@ -14,3 +13,5 @@ while running:
     if event.type == pygame.QUIT:
       running = False
 
+  screen.fill(background_colour)
+  pygame.display.flip()
