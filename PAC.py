@@ -15,4 +15,3 @@ while running:
 
   screen.fill(background_colour)
   pygame.display.flip()
-
