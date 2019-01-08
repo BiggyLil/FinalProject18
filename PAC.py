@@ -1,5 +1,5 @@
 import pygame
-background_colour = (255,255,255)
+background_colour = (0,0,0)
 
 width, height = 400, 400
 screen = pygame.display.set_mode((width, height))
@@ -15,3 +15,4 @@ while running:
 
   screen.fill(background_colour)
   pygame.display.flip()
+
