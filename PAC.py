@@ -20,28 +20,34 @@ pac = pygame.image.load('dom.png')
 class Ghosts:
   def __init__(self, name):
     self.name=name
+    if self.name== 'derbie':
+      image= pygame.image.load('derbie.png')
+    if self.name== 'dobe':
+      image== pygame.image.load('dobe.png')
+    if self.name== 'dobie':
+      image== pygame.image.load('dobie.png')
 
-    def move(self):
-       screen.blit(Ghosts, (s,n))
-        s += random.randint(-5,5)
-        n += random.randint(-5,5)
-         if s < 0:
-           s=400
-         elif s > 400:
-           s=0
-          if n < 0:
-            n=400
-          elif n > 400:
-            n=0
+  def display(self):
+
+  
+  def move(self):
+    screen.blit((image), (s,n))
+    s += random.randint(-5,5)
+    n += random.randint(-5,5)
+    if s < 0:
+      s=400
+    elif s > 400:
+      s=0
+    if n < 0:
+     n=400
+    elif n > 400:
+      n=0
 
 derbie= Ghosts('derbie')
 dobe= Ghosts('dobe')
 dobie =Ghosts('dobie')
 
 
-derbie = pygame.image.load('derbie.png')
-dobe = pygame.image.load('dobe.png')
-dobie = pygame.image.load('dobie.png')
 
 derbie.move()
 dove.move()
@@ -56,4 +62,11 @@ while running:
 
   screen.fill(background_colour)
   
+  if event.type == pygame.KEYDOWN:
+    if pygame.key.name(event.key) == 'up':
+      y-=1
+    if pygame.key.name(event.key) == 'down':
+      y+=1
+      
   pygame.display.flip()
+
