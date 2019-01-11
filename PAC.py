@@ -12,8 +12,6 @@ pygame.display.set_caption('PACMAN')
 
 x=0
 y=0
-# s=0
-# n=0
 
 class Ghosts:
   def __init__(self, name):
@@ -79,7 +77,7 @@ while running:
 
   screen.blit(pac, (x, y))
   pacman_w = 100
-  pacman_h = 400
+  pacman_h = 100
   if x < 0:
      x=0
   elif x > 400-pacman_w:
