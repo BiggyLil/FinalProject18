@@ -13,6 +13,9 @@ pygame.display.set_caption('PACMAN')
 x=0
 y=0
 
+ghost_h= 100
+ghost_w= 100
+
 class Ghosts:
   def __init__(self, name):
     self.name=name
@@ -33,13 +36,13 @@ class Ghosts:
     self.x += random.randint(-5,5)
     self.y += random.randint(-5,5)
     if self.x < 0:
-      self.x=400
-    elif self.x > 400:
-      self.x=0
+      self.x= 0
+    elif self.x > 800-ghost_w:
+      self.x= 800-ghost_w
     if self.y < 0:
-     self.y=400
-    elif self.y > 400:
-      self.y=0
+     self.y= 0
+    elif self.y > 400-ghost_h:
+      self.y= 400-ghost_h
 
 derbie= Ghosts('derbie')
 dobe= Ghosts('dobe')
@@ -74,14 +77,15 @@ while running:
   derbie.display()
   dobe.display()
   dobie.display()
+  
 
   screen.blit(pac, (x, y))
   pacman_w = 100
   pacman_h = 100
   if x < 0:
      x=0
-  elif x > 400-pacman_w:
-    x=400-pacman_w
+  elif x > 800-pacman_w:
+    x=800-pacman_w
   if y < 0:
     y=0
   elif y > 400-pacman_h:
