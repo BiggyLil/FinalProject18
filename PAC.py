@@ -13,11 +13,13 @@ pygame.display.set_caption('PACMAN')
 px=400
 py=200
 
-ghost_h= 100
-ghost_w= 100
+ghost_h= 88
+ghost_w= 75
 
 dx= 700
 dy= 300
+
+lives=3
 
 class Ghosts:
   def __init__(self, name):
@@ -26,11 +28,11 @@ class Ghosts:
     self.x = 50
     self.y = 50
     if name== 'derbie':
-      self.image= pygame.image.load('derbie.png')
+      self.image= pygame.image.load('ghooooooooost.png')
     if name== 'dobe':
-      self.image= pygame.image.load('dobe.png')
+      self.image= pygame.image.load('omgggggggggg.png')
     if name== 'dobie':
-      self.image= pygame.image.load('dobie.png')
+      self.image= pygame.image.load('ahhhhhhhh.png')
   
   def display(self):
     screen.blit(self.image, (self.x, self.y))
@@ -38,12 +40,9 @@ class Ghosts:
   def move(self):
     distx= px-self.x
     disty= py-self.y
-    if random.random()<.01:
+    if random.random()<.02:
       self.x+=distx/20
       self.y+=disty/20
-    else:
-      self.x += random.randint(-1,1)
-      self.y += random.randint(-1,1)
 
     if self.x < 0:
       self.x= 0
@@ -58,10 +57,11 @@ derbie= Ghosts('derbie')
 dobe= Ghosts('dobe')
 dobie =Ghosts('dobie')
 
-pac = pygame.image.load('dom.png') 
+pac = pygame.image.load('PAAAAAAAAAAAAACCCCCCCCCC.png') 
   
-running = True
-while running:
+running=True 
+
+while running=True:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
@@ -70,13 +70,13 @@ while running:
   
   if event.type == pygame.KEYDOWN:
     if pygame.key.name(event.key) == 'up':
-      py-=5
+      py-=1
     if pygame.key.name(event.key) == 'down':
-      py+=5
+      py+=1
     if pygame.key.name(event.key) == 'right':
-      px+=5
+      px+=1
     if pygame.key.name(event.key) == 'left':
-      px-=5
+      px-=1
   
   derbie.move()
   dobe.move()
@@ -88,8 +88,8 @@ while running:
   
 
   screen.blit(pac, (px, py))
-  pacman_w = 100
-  pacman_h = 100
+  pacman_w = 75
+  pacman_h = 75
   if px < 0:
      px=0
   elif px > 800-pacman_w:
