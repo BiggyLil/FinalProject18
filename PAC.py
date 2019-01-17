@@ -8,30 +8,26 @@ background_colour = (0,0,0)
 width, height = 800, 400
 screen = pygame.display.set_mode((width, height))
 
-pygame.display.set_caption('PACMAN')
-
-px=400
-py=200
+pygame.display.set_caption("PACMAN")
 
 ghost_h= 50
 ghost_w= 50
 
-dx= 700
-dy= 300
-
 pacman_w = 50
 pacman_h = 50
+
+all_sprites= pygame.sprite.Group()
 
 lives=3
 
 class Pacman(pygame.sprite.Sprite):
   """defines paccy"""
   def __init__(self):
+    self.image= pygame.image.load('PAAAAAAAAAAAAACCCCCCCCCC.png')
+    self.rect=self.image.get_rect()
     self.rect.x=0
     self.rect.y=0
     super.__init__()
-    self.image= pygame.image.load('PAAAAAAAAAAAAACCCCCCCCCC.png')
-    self.rect=self.image.get_rect()
 
   def display(self):
     screen.blit(pac, (px, py))
@@ -57,12 +53,11 @@ class Pacman(pygame.sprite.Sprite):
      py=400-pacman_h
 
 pac=Pacman()
+all_sprites.add(pac)
 
 class Ghosts(pygame.sprite.Sprite):
   """defines ghosties"""
   def __init__(self):
-    self.rect.x = 50
-    self.rect.y = 50
     super.__init__()
     if name== 'derbie':
       self.image= pygame.image.load('ghooooooooost.png')
@@ -71,6 +66,8 @@ class Ghosts(pygame.sprite.Sprite):
     if name== 'dobie':
       self.image= pygame.image.load('ahhhhhhhh.png')
     self.rect=self.image.get_rect()
+    self.rect.x = 50
+    self.rect.y = 50
 
   def display(self):
     screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -94,19 +91,31 @@ class Ghosts(pygame.sprite.Sprite):
 derbie= Ghosts()
 dobe= Ghosts()
 dobie =Ghosts()
+
+ghost_list= [derbie, dobe, dobie]
+
+for ghost in ghost_list:
+  all_sprites.add(ghost)
  
 class Dot(pygame.sprite.Sprite):
   """defines dot"""
   def __init__(self):
-    self.rect.x= 700
-    self.rect.y= 300
     super.__init__()
     self.image= pygame.image.load('dot.png')
     self.rect= self.image.get_rect()
+    self.rect.x= 700
+    self.rect.y= 300
   
   def display(self):
     screen.blit(self.image, (self.rect.x,self.rect.y))
 
+  def move(self, Pacman):
+    if pygame.sprite.spritecollide(self, Pacman, False):
+      self.rect.x= random.randint(0,700)
+      self.rect.y= random.randint(0,300)
+
+dot= Dot()
+all_sprites.add(dot)
 
 running=True 
 
@@ -116,22 +125,18 @@ while running==True:
       running = False
 
   screen.fill(background_colour)
-  
-  derbie.move()
-  dobe.move()
-  dobie.move()
 
-  derbie.display()
-  dobe.display()
-  dobie.display()
+  for ghost in ghost_list:
+    ghost_list[ghost].display()
+
+  for ghost in ghost_list:
+    ghost_list[ghost].move(pac)
 
   pac.display()
   pac.move()
 
   dot.display()
-
-    # dx= random.randint(0,700)
-    # dy= random.randint(0,300)
+  dot.move(pac)
 
   pygame.display.flip()
 
