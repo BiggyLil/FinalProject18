@@ -110,8 +110,7 @@ class Dot(pygame.sprite.Sprite):
   def display(self):
     screen.blit(self.image, (self.rect.x,self.rect.y))
 
-  def update(self, Pacman):
-    if pygame.sprite.spritecollide(self, Pacman, False):
+  def update(self):
       self.rect.x= random.randint(0,700)
       self.rect.y= random.randint(0,300)
  
@@ -129,17 +128,12 @@ while running==True:
 
   ghost_list.update(pac)
   ghost_list.draw(screen)
-  # for ghost in ghost_list:
-  #   ghost.display()
-
-  # for ghost in ghost_list:
-  #   ghost.update(pac)
 
   pac.display()
   pac.update()
 
   dot.display()
-  # dot.update(pac)
+  dot.update(pac)
 
   pygame.display.flip()
 
