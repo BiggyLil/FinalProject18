@@ -72,9 +72,10 @@ class Ghosts(pygame.sprite.Sprite):
   # def display(self):
   #   screen.blit(self.image, (self.rect.x, self.rect.y))
  
+
   def update(self, Pacman):
     distx= Pacman.rect.x-self.rect.x
-    disty= Pacman.rect.x-self.rect.y
+    disty= Pacman.rect.y-self.rect.y
     if random.random()<.02:
       self.rect.x+=distx/20
       self.rect.y+=disty/20
@@ -126,7 +127,7 @@ while running==True:
 
   screen.fill(background_colour)
 
-  # ghost_list.update(pac)
+  ghost_list.update(pac)
   ghost_list.draw(screen)
   # for ghost in ghost_list:
   #   ghost.display()
