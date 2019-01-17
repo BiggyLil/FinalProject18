@@ -8,7 +8,7 @@ background_colour = (0,0,0)
 width, height = 800, 400
 screen = pygame.display.set_mode((width, height))
 
-pygame.display.set_caption("PACMAN")
+pygame.display.set_caption("PACMAN BUT BETTER")
 
 ghost_h= 50
 ghost_w= 50
@@ -23,16 +23,16 @@ lives=3
 class Pacman(pygame.sprite.Sprite):
   """defines paccy"""
   def __init__(self):
+    super().__init__()
     self.image= pygame.image.load('PAAAAAAAAAAAAACCCCCCCCCC.png')
     self.rect=self.image.get_rect()
     self.rect.x=0
     self.rect.y=0
-    super.__init__()
 
   def display(self):
-    screen.blit(pac, (px, py))
+    screen.blit(self.image, (self.rect.x, self.rect.y))
  
-  def move(self):
+  def update(self):
    if event.type == pygame.KEYDOWN:
     if pygame.key.name(event.key) == 'up':
       self.rect.y-=1
@@ -43,22 +43,22 @@ class Pacman(pygame.sprite.Sprite):
     if pygame.key.name(event.key) == 'left':
       self.rect.x-=1
 
-   if px < 0:
-     px=0
-   elif px > 800-pacman_w:
-      px=800-pacman_w
-   if py < 0:
-      py=0
-   elif py > 400-pacman_h:
-     py=400-pacman_h
+   if self.rect.x < 0:
+     self.rect.x=0
+   elif self.rect.x > 800-pacman_w:
+      self.rect.x=800-pacman_w
+   if self.rect.y < 0:
+      self.rect.y=0
+   elif self.rect.y > 400-pacman_h:
+     self.rect.y=400-pacman_h
 
 pac=Pacman()
 all_sprites.add(pac)
 
 class Ghosts(pygame.sprite.Sprite):
   """defines ghosties"""
-  def __init__(self):
-    super.__init__()
+  def __init__(self, name):
+    super().__init__()
     if name== 'derbie':
       self.image= pygame.image.load('ghooooooooost.png')
     if name== 'dobe':
@@ -69,10 +69,10 @@ class Ghosts(pygame.sprite.Sprite):
     self.rect.x = 50
     self.rect.y = 50
 
-  def display(self):
-    screen.blit(self.image, (self.rect.x, self.rect.y))
+  # def display(self):
+  #   screen.blit(self.image, (self.rect.x, self.rect.y))
  
-  def move(self, Pacman):
+  def update(self, Pacman):
     distx= Pacman.rect.x-self.rect.x
     disty= Pacman.rect.x-self.rect.y
     if random.random()<.02:
@@ -88,19 +88,19 @@ class Ghosts(pygame.sprite.Sprite):
     elif self.rect.y > 400-ghost_h:
       self.rect.y= 400-ghost_h
 
-derbie= Ghosts()
-dobe= Ghosts()
-dobie =Ghosts()
+derbie= Ghosts('derbie')
+dobe= Ghosts('dobe')
+dobie =Ghosts('dobie')
 
-ghost_list= [derbie, dobe, dobie]
-
-for ghost in ghost_list:
-  all_sprites.add(ghost)
+ghost_list= pygame.sprite.Group()
+ghost_list.add(Ghosts('derbie'))
+ghost_list.add(Ghosts('dobe'))
+ghost_list.add(Ghosts("dobie"))
  
 class Dot(pygame.sprite.Sprite):
   """defines dot"""
   def __init__(self):
-    super.__init__()
+    super().__init__()
     self.image= pygame.image.load('dot.png')
     self.rect= self.image.get_rect()
     self.rect.x= 700
@@ -109,11 +109,11 @@ class Dot(pygame.sprite.Sprite):
   def display(self):
     screen.blit(self.image, (self.rect.x,self.rect.y))
 
-  def move(self, Pacman):
+  def update(self, Pacman):
     if pygame.sprite.spritecollide(self, Pacman, False):
       self.rect.x= random.randint(0,700)
       self.rect.y= random.randint(0,300)
-
+ 
 dot= Dot()
 all_sprites.add(dot)
 
@@ -126,17 +126,19 @@ while running==True:
 
   screen.fill(background_colour)
 
-  for ghost in ghost_list:
-    ghost_list[ghost].display()
+  # ghost_list.update(pac)
+  ghost_list.draw(screen)
+  # for ghost in ghost_list:
+  #   ghost.display()
 
-  for ghost in ghost_list:
-    ghost_list[ghost].move(pac)
+  # for ghost in ghost_list:
+  #   ghost.update(pac)
 
   pac.display()
-  pac.move()
+  pac.update()
 
   dot.display()
-  dot.move(pac)
+  # dot.update(pac)
 
   pygame.display.flip()
 
