@@ -132,5 +132,4 @@ while running==True:
   if pygame.sprite.collide_rect(pac, dot):
     dot.update()
 
-
   pygame.display.flip()
