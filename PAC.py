@@ -69,10 +69,6 @@ class Ghosts(pygame.sprite.Sprite):
     self.rect.x = 50
     self.rect.y = 50
 
-  # def display(self):
-  #   screen.blit(self.image, (self.rect.x, self.rect.y))
- 
-
   def update(self, Pacman):
     distx= Pacman.rect.x-self.rect.x
     disty= Pacman.rect.y-self.rect.y
@@ -133,7 +129,8 @@ while running==True:
   pac.update()
 
   dot.display()
-  dot.update(pac)
+  if pygame.sprite.collide_rect(pac, dot):
+    dot.update()
+
 
   pygame.display.flip()
-
