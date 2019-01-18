@@ -5,8 +5,9 @@ pygame.init()
 
 background_colour = (0,0,0)
 
-width, height = 800, 400
-screen = pygame.display.set_mode((width, height))
+s_width = 1300
+s_height = 600
+screen = pygame.display.set_mode((s_width, s_height))
 
 pygame.display.set_caption("PACMAN BUT BETTER")
 
@@ -19,6 +20,8 @@ pacman_h = 50
 all_sprites= pygame.sprite.Group()
 
 lives=3
+
+points=0
 
 class Pacman(pygame.sprite.Sprite):
   """defines paccy"""
@@ -45,12 +48,12 @@ class Pacman(pygame.sprite.Sprite):
 
    if self.rect.x < 0:
      self.rect.x=0
-   elif self.rect.x > 800-pacman_w:
-      self.rect.x=800-pacman_w
+   elif self.rect.x > s_width - pacman_w - 100:
+      self.rect.x= s_width - pacman_w - 100
    if self.rect.y < 0:
-      self.rect.y=0
-   elif self.rect.y > 400-pacman_h:
-     self.rect.y=400-pacman_h
+      self.rect.y = 0
+   elif self.rect.y > s_height - pacman_h - 100:
+     self.rect.y= s_height - pacman_h - 100
 
 pac=Pacman()
 all_sprites.add(pac)
@@ -77,13 +80,13 @@ class Ghosts(pygame.sprite.Sprite):
       self.rect.y+=disty/20
 
     if self.rect.x < 0:
-      self.rect.x= 0
-    elif self.rect.x > 800-ghost_w:
-      self.rect.x= 800-ghost_w
+      self.rect.x = 0
+    elif self.rect.x > s_width - ghost_w - 100:
+      self.rect.x= s_width - ghost_w - 100
     if self.rect.y < 0:
      self.rect.y= 0
-    elif self.rect.y > 400-ghost_h:
-      self.rect.y= 400-ghost_h
+    elif self.rect.y > s_height - ghost_h - 100:
+      self.rect.y= s_height - ghost_h - 100
 
 derbie= Ghosts('derbie')
 dobe= Ghosts('dobe')
@@ -107,8 +110,8 @@ class Dot(pygame.sprite.Sprite):
     screen.blit(self.image, (self.rect.x,self.rect.y))
 
   def update(self):
-      self.rect.x= random.randint(0,700)
-      self.rect.y= random.randint(0,300)
+      self.rect.x= random.randint(0,s_width-100)
+      self.rect.y= random.randint(0,s_height-100)
  
 dot= Dot()
 all_sprites.add(dot)
@@ -131,5 +134,15 @@ while running==True:
   dot.display()
   if pygame.sprite.collide_rect(pac, dot):
     dot.update()
+    points+=10
+
+  # if pygame.sprite.collide_rect(pac, ghost_list):
+  #   lives-=1
+
+  if lives<0:
+    break
 
   pygame.display.flip()
+
+gameover= pygame.image.load("Game Over Screen.jpg")
+screen.blit(gameover, (400, 200))
