@@ -40,8 +40,9 @@ class Pacman(pygame.sprite.Sprite):
     super().__init__()
     self.image= pygame.image.load('PAAAAAAAAAAAAACCCCCCCCCC.png')
     self.rect=self.image.get_rect()
-    self.rect.x=0
-    self.rect.y=0
+    self.rect.x=650
+    self.rect.y=100
+    #may need to change this later
 
   def display(self):
     screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -80,8 +81,9 @@ class Ghosts(pygame.sprite.Sprite):
     if name== 'dobie':
       self.image= pygame.image.load('ahhhhhhhh.png')
     self.rect=self.image.get_rect()
-    self.rect.x = 50
-    self.rect.y = 50
+    self.rect.x = 650
+    self.rect.y = 500
+    #may need to change this
 
   def update(self, Pacman):
     distx= Pacman.rect.x-self.rect.x
@@ -137,7 +139,16 @@ def message_display(text, color, x, y, size):
   TextRect.center = (x,y)
   screen.blit(TextSurf, TextRect)
   pygame.display.update()
- 
+
+def button (msg, x, y, w, h, mon, moff, tc, ts):
+    mouse =  pygame.mouse.get_pos()
+    if x+w > mouse[0] > x and y+h > mouse[1] > y:
+      pygame.draw.rect(screen, mon, (x,y,w,h))
+    else:
+      pygame.draw.rect(screen, moff, (x,y,w,h))
+
+    message_display(msg, tc, (x+(w/2)), (y+(h/2)), ts)
+
 def game_intro():
   intro =  True
   while intro:
@@ -149,13 +160,7 @@ def game_intro():
     
     message_display("PACMAN(2.0)", white, s_width/2, 100, 115)
 
-    mouse =  pygame.mouse.get_pos()
-    if 515+300 > mouse[0] > 515 and 200+50 > mouse[1] > 200:
-      pygame.draw.rect(screen, gray, (515,200,300,50))
-    else:
-      pygame.draw.rect(screen, white, (515,200,300,50))
-
-    message_display("START", black, (515+(300/2)), (200+(50/2)), 50)
+    button("START", 515, 200, 300, 50, gray, white, black, 50)
 
     pygame.display.flip()
     Clock.tick(5)
@@ -191,4 +196,4 @@ while running==True:
   pygame.display.flip()
 
 gameover= pygame.image.load("Game Over Screen.jpg")
-screen.blit(gameover, (400, 200))
+screen.blit(gameover, (400, y))
