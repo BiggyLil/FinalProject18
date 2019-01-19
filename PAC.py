@@ -1,9 +1,17 @@
 import pygame
 import os
 import random
+import time
+
 pygame.init()
 
-background_colour = (0,0,0)
+Clock = pygame.time.Clock()
+
+black = (0,0,0)
+
+white = (255,255,255)
+
+gray = (169,169,169)
 
 s_width = 1300
 s_height = 600
@@ -22,6 +30,9 @@ all_sprites= pygame.sprite.Group()
 lives=3
 
 points=0
+
+welcome= pygame.image.load("intro screen.jpg")
+gameover= pygame.image.load("Game Over Screen.jpg")
 
 class Pacman(pygame.sprite.Sprite):
   """defines paccy"""
@@ -103,8 +114,8 @@ class Dot(pygame.sprite.Sprite):
     super().__init__()
     self.image= pygame.image.load('dot.png')
     self.rect= self.image.get_rect()
-    self.rect.x= 700
-    self.rect.y= 300
+    self.rect.x= s_width/2
+    self.rect.y= s_height/2
   
   def display(self):
     screen.blit(self.image, (self.rect.x,self.rect.y))
@@ -116,14 +127,47 @@ class Dot(pygame.sprite.Sprite):
 dot= Dot()
 all_sprites.add(dot)
 
+def text_objects(text, font):
+  textSurface= font.render (text, True, white)
+  return textSurface, textSurface.get_rect()
+
+def message_display(text, x, y):
+  largeText = pygame.font.Font('freesansbold.ttf', 115)
+  TextSurf, TextRect = text_objects(text, largeText)
+  TextRect.center = (x,y)
+  screen.blit(TextSurf, TextRect)
+  pygame.display.update()
+ 
+def game_intro():
+  intro =  True
+  while intro:
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        pygame.quit()
+        quit()
+    screen.blit(welcome, (0,0))
+    
+    message_display("PACMAN(2.0)", s_width/2, 100)
+
+    mouse =  pygame.mouse.get_pos()
+    if 515+300 > mouse[0] > 515 and 200+50 > 200:
+      pygame.draw.rect(screen, gray, (515,200,300,50))
+    else:
+      pygame.draw.rect(screen, white, (515,200,300,50))
+
+    pygame.display.flip()
+    Clock.tick(15)
+ 
 running=True 
 
 while running==True:
+  game_intro()
+
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
 
-  screen.fill(background_colour)
+  screen.fill(black)
 
   ghost_list.update(pac)
   ghost_list.draw(screen)
