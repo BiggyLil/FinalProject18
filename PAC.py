@@ -127,13 +127,13 @@ class Dot(pygame.sprite.Sprite):
 dot= Dot()
 all_sprites.add(dot)
 
-def text_objects(text, font):
-  textSurface= font.render (text, True, white)
+def text_objects(text, font, color):
+  textSurface= font.render (text, True, color)
   return textSurface, textSurface.get_rect()
 
-def message_display(text, x, y):
-  largeText = pygame.font.Font('freesansbold.ttf', 115)
-  TextSurf, TextRect = text_objects(text, largeText)
+def message_display(text, color, x, y, size):
+  Text = pygame.font.Font('freesansbold.ttf', size)
+  TextSurf, TextRect = text_objects(text, Text, color)
   TextRect.center = (x,y)
   screen.blit(TextSurf, TextRect)
   pygame.display.update()
@@ -147,16 +147,18 @@ def game_intro():
         quit()
     screen.blit(welcome, (0,0))
     
-    message_display("PACMAN(2.0)", s_width/2, 100)
+    message_display("PACMAN(2.0)", white, s_width/2, 100, 115)
 
     mouse =  pygame.mouse.get_pos()
-    if 515+300 > mouse[0] > 515 and 200+50 > 200:
+    if 515+300 > mouse[0] > 515 and 200+50 > mouse[1] > 200:
       pygame.draw.rect(screen, gray, (515,200,300,50))
     else:
       pygame.draw.rect(screen, white, (515,200,300,50))
 
+    message_display("START", black, (515+(300/2)), (200+(50/2)), 50)
+
     pygame.display.flip()
-    Clock.tick(15)
+    Clock.tick(5)
  
 running=True 
 
