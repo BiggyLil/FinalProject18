@@ -31,6 +31,8 @@ lives=3
 
 points=0
 
+dotcontact=0
+
 welcome= pygame.image.load("intro screen.jpg")
 gameover= pygame.image.load("Game Over Screen.jpg")
 
@@ -40,8 +42,8 @@ class Pacman(pygame.sprite.Sprite):
     super().__init__()
     self.image= pygame.image.load('PAAAAAAAAAAAAACCCCCCCCCC.png')
     self.rect=self.image.get_rect()
-    self.rect.x=650
-    self.rect.y=100
+    self.rect.x=0
+    self.rect.y=0
     #may need to change this later
 
   def display(self):
@@ -60,12 +62,12 @@ class Pacman(pygame.sprite.Sprite):
 
    if self.rect.x < 0:
      self.rect.x=0
-   elif self.rect.x > s_width - pacman_w - 100:
-      self.rect.x= s_width - pacman_w - 100
+   elif self.rect.x > s_width-pacman_w-100:
+      self.rect.x=s_width-pacman_w-100
    if self.rect.y < 0:
-      self.rect.y = 0
-   elif self.rect.y > s_height - pacman_h - 100:
-     self.rect.y= s_height - pacman_h - 100
+      self.rect.y=0
+   elif self.rect.y > s_height-pacman_w-100:
+     self.rect.y= s_height-pacman_w-100
 
 pac=Pacman()
 all_sprites.add(pac)
@@ -123,8 +125,8 @@ class Dot(pygame.sprite.Sprite):
     screen.blit(self.image, (self.rect.x,self.rect.y))
 
   def update(self):
-      self.rect.x= random.randint(0,s_width-100)
-      self.rect.y= random.randint(0,s_height-100)
+    self.rect.x= random.randint(0,s_width-150)
+    self.rect.y= random.randint(0,s_height-150)
  
 dot= Dot()
 all_sprites.add(dot)
@@ -138,16 +140,17 @@ def message_display(text, color, x, y, size):
   TextSurf, TextRect = text_objects(text, Text, color)
   TextRect.center = (x,y)
   screen.blit(TextSurf, TextRect)
-  pygame.display.update()
 
 def button (msg, x, y, w, h, mon, moff, tc, ts):
-    mouse =  pygame.mouse.get_pos()
-    if x+w > mouse[0] > x and y+h > mouse[1] > y:
-      pygame.draw.rect(screen, mon, (x,y,w,h))
-    else:
-      pygame.draw.rect(screen, moff, (x,y,w,h))
+  mouse =  pygame.mouse.get_pos()
 
-    message_display(msg, tc, (x+(w/2)), (y+(h/2)), ts)
+  if x+w > mouse[0] > x and y+h > mouse[1] > y:
+    pygame.draw.rect(screen, mon, (x,y,w,h))
+        
+  else:
+    pygame.draw.rect(screen, moff, (x,y,w,h))
+
+  message_display(msg, tc, (x+(w/2)), (y+(h/2)), ts)
 
 def game_intro():
   intro =  True
@@ -161,23 +164,46 @@ def game_intro():
     message_display("PACMAN(2.0)", white, s_width/2, 100, 115)
 
     button("START", 515, 200, 300, 50, gray, white, black, 50)
+    
+    # if pygame.mouse.get_pressed()[0]:
+    #   print("heyo")
+
+
 
     pygame.display.flip()
+    
     Clock.tick(5)
  
-running=True 
+def game_over():
+  """displays game over screen"""
+  lost = True
+  while lost:
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        pygame.quit()
+        quit()
+    screen.blit(gameover, (0,0))
 
-while running==True:
-  game_intro()
+    button("EXIT", 325, 320, 300, 50, gray, white, black, 50)
+    button("PLAY AGAIN", 650, 320, 300, 50, gray, white, black, 40)
+  
+    pygame.display.flip()
+    Clock.tick(5)
 
+# game_intro()
+level=int()
+
+running = True 
+
+while running == True:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
 
   screen.fill(black)
 
-  ghost_list.update(pac)
   ghost_list.draw(screen)
+  ghost_list.update(pac)
 
   pac.display()
   pac.update()
@@ -185,15 +211,30 @@ while running==True:
   dot.display()
   if pygame.sprite.collide_rect(pac, dot):
     dot.update()
-    points+=10
+    dotcontact+=1
+    if 3<dotcontact<7:
+      level=2
+      points+=50
+    elif 6<dotcontact<10:
+      level=3
+      points+=100
+    else:
+      level=1
+      points+=10
 
-  # if pygame.sprite.collide_rect(pac, ghost_list):
-  #   lives-=1
+  # if pygame.sprite.collide_rect(pac, derbie):
+  #  lives-=1
 
   if lives<0:
-    break
+    gameover()
+
+  message_display("Points:", white, 1230, 50, 20)
+  message_display(f"{points}", white, 1230, 80, 20)
+  message_display(f"Level:{level}", white, 325, 560, 50)
+  message_display(f"Lives Left:{lives}", white, 975, 560, 50)
+
 
   pygame.display.flip()
 
-gameover= pygame.image.load("Game Over Screen.jpg")
-screen.blit(gameover, (400, y))
+
+
