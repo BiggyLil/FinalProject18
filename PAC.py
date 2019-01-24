@@ -27,11 +27,11 @@ pacman_h = 50
 
 all_sprites= pygame.sprite.Group()
 
-lives=3
-
 points=0
 
 dotcontact=0
+
+level=int()
 
 welcome= pygame.image.load("intro screen.jpg")
 gameover= pygame.image.load("Game Over Screen.jpg")
@@ -52,13 +52,13 @@ class Pacman(pygame.sprite.Sprite):
   def update(self):
    if event.type == pygame.KEYDOWN:
     if pygame.key.name(event.key) == 'up':
-      self.rect.y-=1
+      self.rect.y-=5
     if pygame.key.name(event.key) == 'down':
-      self.rect.y+=1
+      self.rect.y+=5
     if pygame.key.name(event.key) == 'right':
-      self.rect.x+=1
+      self.rect.x+=5
     if pygame.key.name(event.key) == 'left':
-      self.rect.x-=1
+      self.rect.x-=5
 
    if self.rect.x < 0:
      self.rect.x=0
@@ -83,16 +83,16 @@ class Ghosts(pygame.sprite.Sprite):
     if name== 'dobie':
       self.image= pygame.image.load('ahhhhhhhh.png')
     self.rect=self.image.get_rect()
-    self.rect.x = 650
-    self.rect.y = 500
+    self.rect.x = 1100
+    self.rect.y = 200
     #may need to change this
 
-  def update(self, Pacman):
+  def update(self, Pacman,num):
     distx= Pacman.rect.x-self.rect.x
     disty= Pacman.rect.y-self.rect.y
     if random.random()<.02:
-      self.rect.x+=distx/20
-      self.rect.y+=disty/20
+      self.rect.x+=distx/num
+      self.rect.y+=disty/num
 
     if self.rect.x < 0:
       self.rect.x = 0
@@ -102,6 +102,7 @@ class Ghosts(pygame.sprite.Sprite):
      self.rect.y= 0
     elif self.rect.y > s_height - ghost_h - 100:
       self.rect.y= s_height - ghost_h - 100
+
 
 derbie= Ghosts('derbie')
 dobe= Ghosts('dobe')
@@ -152,32 +153,35 @@ def button (msg, x, y, w, h, mon, moff, tc, ts):
 
   message_display(msg, tc, (x+(w/2)), (y+(h/2)), ts)
 
+intro_mode= True
+
 def game_intro():
-  intro =  True
-  while intro:
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-        pygame.quit()
-        quit()
-    screen.blit(welcome, (0,0))
+  global intro_mode
+  for event in pygame.event.get():
+    if event.type == pygame.QUIT:
+      pygame.quit()
+  
+  screen.blit(welcome, (0,0))
+  
+  message_display("PACMAN(2.0)", white, s_width/2, 100, 115)
+
+  button("START", 515, 200, 300, 50, gray, white, black, 50)
+  
+  if 515+300 > pygame.mouse.get_pos()[0] > 515 and 200+50 > pygame.mouse.get_pos()[1] > 200:
+    if pygame.MOUSEBUTTONDOWN:
+      intro_mode= False
+
+  pygame.display.flip()
     
-    message_display("PACMAN(2.0)", white, s_width/2, 100, 115)
-
-    button("START", 515, 200, 300, 50, gray, white, black, 50)
-    
-    # if pygame.mouse.get_pressed()[0]:
-    #   print("heyo")
-
-
-
-    pygame.display.flip()
-    
-    Clock.tick(5)
+  Clock.tick(5)
  
 def game_over():
   """displays game over screen"""
+  global points
+  global dotcontact
+
   lost = True
-  while lost:
+  while lost==True:
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         pygame.quit()
@@ -186,12 +190,25 @@ def game_over():
 
     button("EXIT", 325, 320, 300, 50, gray, white, black, 50)
     button("PLAY AGAIN", 650, 320, 300, 50, gray, white, black, 40)
-  
+
+    if 325+300 >  pygame.mouse.get_pos()[0] > 325 and 320+50 >  pygame.mouse.get_pos()[1] > 320:
+      if pygame.MOUSEBUTTONDOWN:
+        pygame.quit()
+    
+    if 650+300 >  pygame.mouse.get_pos()[0] > 650 and 320+50 >  pygame.mouse.get_pos()[1] > 320:
+      if pygame.MOUSEBUTTONDOWN:
+        intro_mode= True
+        lost = False
+        pac.rect.x= 0
+        pac.rect.y= 0
+        for ghost in ghost_list:
+          ghost.rect.x= 1100
+          ghost.rect.y= 200
+          points= 0
+          dotcontact=0
+
     pygame.display.flip()
     Clock.tick(5)
-
-# game_intro()
-level=int()
 
 running = True 
 
@@ -200,39 +217,48 @@ while running == True:
     if event.type == pygame.QUIT:
       running = False
 
+  while intro_mode== True:
+    game_intro()
+
   screen.fill(black)
 
   ghost_list.draw(screen)
-  ghost_list.update(pac)
 
   pac.display()
   pac.update()
 
   dot.display()
+
   if pygame.sprite.collide_rect(pac, dot):
     dot.update()
     dotcontact+=1
-    if 3<dotcontact<7:
+    if 0<dotcontact<4:
+      level=1
+    elif 3<dotcontact<7:
       level=2
       points+=50
     elif 6<dotcontact<10:
       level=3
       points+=100
     else:
-      level=1
-      points+=10
+      game_over()
 
-  # if pygame.sprite.collide_rect(pac, derbie):
-  #  lives-=1
+  if level==1:
+    ghost_list.update(pac, 20)
+  if level==2:
+    ghost_list.update(pac, 15)
+  else:
+    ghost_list.update(pac, 10)
 
-  if lives<0:
-    gameover()
-
+  if pygame.sprite.spritecollideany(pac, ghost_list):
+    game_over()
+    
   message_display("Points:", white, 1230, 50, 20)
   message_display(f"{points}", white, 1230, 80, 20)
   message_display(f"Level:{level}", white, 325, 560, 50)
-  message_display(f"Lives Left:{lives}", white, 975, 560, 50)
+  message_display(f"You have one life, bud...JUST ONE", white, 975, 560, 30)
 
+  print (intro_mode)
 
   pygame.display.flip()
 
