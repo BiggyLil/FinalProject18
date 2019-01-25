@@ -179,7 +179,7 @@ def game_intro():
   global intro_mode
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
-      pygame.quit()
+      sys.exit
   
   screen.blit(welcome, (0,0))
   
@@ -200,12 +200,13 @@ def game_over():
   """displays game over screen"""
   global points
   global dotcontact
+  global intro_mode
 
   lost = True
   while lost==True:
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
-        pygame.quit()
+        sys.exit()
 
     screen.blit(gameover, (0,0))
 # game over image
@@ -214,7 +215,7 @@ def game_over():
 #exit and play again buttons
     if 325+300 >  pygame.mouse.get_pos()[0] > 325 and 320+50 >  pygame.mouse.get_pos()[1] > 320:
       if pygame.MOUSEBUTTONDOWN:
-        pygame.quit()
+        sys.exit()
 #when exit button is pushed, the game is exited
     if 650+300 >  pygame.mouse.get_pos()[0] > 650 and 320+50 >  pygame.mouse.get_pos()[1] > 320:
       if pygame.MOUSEBUTTONDOWN:
@@ -240,8 +241,8 @@ while running == True:
   """main loop"""
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
-      running = False
-
+      sys.exit()
+  print(f"Intro mode: {intro_mode}")
   while intro_mode== True:
     game_intro()
 
@@ -259,6 +260,7 @@ while running == True:
     dotcontact+=1
     if 0<dotcontact<4:
       level=1
+      points+=10
     elif 3<dotcontact<7:
       level=2
       points+=50
@@ -268,6 +270,7 @@ while running == True:
     else:
       game_over()
 # dot is at new location, level is increased, and game ends once the last level is passed
+  message_display("Points:", white, 1230, 50, 20)
 
   if level==1:
     ghost_list.update(pac, 20)
@@ -281,15 +284,9 @@ while running == True:
     game_over()
 # game ends if pacman touches ghosts
     
-  message_display("Points:", white, 1230, 50, 20)
   message_display(f"{points}", white, 1230, 80, 20)
   message_display(f"Level:{level}", white, 325, 560, 50)
   message_display(f"You have one life, bud...JUST ONE", white, 975, 560, 30)
 #displays number of points left, level, and that lives=1
 
-  print (intro_mode)
-
   pygame.display.flip()
-
-
-
